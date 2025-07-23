@@ -10,21 +10,30 @@ import com.challange.lumiparser.ui.component.LayoutElement
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import kotlinx.coroutines.TimeoutCancellationException
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeout
 import retrofit2.HttpException
 import java.io.IOException
 
 class MainViewModel(private val repository: LayoutRepository, private val api: LayoutAPI): ViewModel() {
-    val isUpdating = MutableStateFlow(false)
-    val layout = MutableStateFlow<LayoutElement?>(null)
-
     private val dbLayout = repository.getFirstLayout()
+    val layout = MutableStateFlow<LayoutElement?>(null)
+    val isUpdating = MutableStateFlow(false)
+
+    private val _toastMessage = MutableSharedFlow<String>()
+    val toastMessage = _toastMessage.asSharedFlow()
 
     init {
         viewModelScope.launch {
             dbLayout.collect { fetchedLayout ->
+                if (fetchedLayout == null || fetchedLayout.layoutJson.isEmpty()) {
+                    requestLayout()
+                }
                 val adapter = moshi.adapter(LayoutElement::class.java)
                 fetchedLayout?.run {
                     val parsed = adapter.fromJson(layoutJson)
@@ -34,29 +43,35 @@ class MainViewModel(private val repository: LayoutRepository, private val api: L
         }
     }
 
-    fun loadLayout() {
+    fun requestLayout() {
         Log.d(TAG, "Calling loadLayout")
-
         viewModelScope.launch {
-            val response = try {
+            try {
                 isUpdating.value = true
-                delay(2000L) // Simulating a long running API request
-                api.getLayout()
-            } catch (ex: IOException) {
-                Log.e(TAG, "IOException, could not fetch data from server")
-                isUpdating.value = false
-                return@launch
-            } catch (ex: HttpException) {
-                Log.e(TAG, "HttpException, unexpected response")
-                isUpdating.value = false
-                return@launch
-            }
+                withTimeout(5000L) { // request timeout 5 seconds
+                    delay(2000L) // Simulating a long running API request
+                    val response = api.getLayout()
 
-            if (response.isSuccessful && response.body() != null) {
-                Log.i(TAG, "Successfully fetched devices data.")
-                repository.upsertLayout(Layout(0, response.body() ?: ""))
+                    if (response.isSuccessful && response.body() != null) {
+                        Log.i(TAG, "Successfully fetched devices data.")
+                        repository.upsertLayout(Layout(0, response.body() ?: ""))
+                    } else {
+                        _toastMessage.emit("Request failed: ${response.code()}")
+                        Log.e(TAG, "Request failed: ${response.code()}")
+                    }
+                }
+            } catch (ex: TimeoutCancellationException) {
+                _toastMessage.emit("Request failed: timeout exceeded")
+                Log.e(TAG, "Request failed: timeout exceeded")
+            } catch (ex: IOException) {
+                _toastMessage.emit("Request failed: could not fetch data from serve")
+                Log.e(TAG, "IOException, could not fetch data from server")
+            } catch (ex: HttpException) {
+                _toastMessage.emit("Request failed: unexpected response")
+                Log.e(TAG, "HttpException, unexpected response")
+            } finally {
+                isUpdating.value = false
             }
-            isUpdating.value = false
         }
     }
 

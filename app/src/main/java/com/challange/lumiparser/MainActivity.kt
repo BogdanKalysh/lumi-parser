@@ -29,6 +29,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        viewModel.loadLayout()
     }
 }
