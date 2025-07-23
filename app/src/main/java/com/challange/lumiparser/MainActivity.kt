@@ -30,7 +30,7 @@ class MainActivity : ComponentActivity() {
                     val layout by viewModel.layout.collectAsState(initial = null)
 
                     layout?.run {
-                        TextDisplayer(layoutJson, Modifier.padding(innerPadding))
+                        TextDisplayer(toString(), Modifier.padding(innerPadding))
                     }
                 }
             }

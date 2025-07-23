@@ -6,6 +6,10 @@ import androidx.lifecycle.viewModelScope
 import com.challange.lumiparser.retrofit.LayoutAPI
 import com.challange.lumiparser.room.LayoutRepository
 import com.challange.lumiparser.room.models.Layout
+import com.challange.lumiparser.ui.component.LayoutElement
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -13,7 +17,21 @@ import java.io.IOException
 
 class MainViewModel(private val repository: LayoutRepository, private val api: LayoutAPI): ViewModel() {
     val isUpdating = MutableStateFlow(false)
-    val layout = repository.getFirstLayout()
+    val layout = MutableStateFlow<LayoutElement?>(null)
+
+    private val dbLayout = repository.getFirstLayout()
+
+    init {
+        viewModelScope.launch {
+            dbLayout.collect { fetchedLayout ->
+                val adapter = moshi.adapter(LayoutElement::class.java)
+                fetchedLayout?.run {
+                    val parsed = adapter.fromJson(layoutJson)
+                    layout.value = parsed
+                }
+            }
+        }
+    }
 
     fun loadLayout() {
         Log.d(TAG, "Calling loadLayout")
@@ -41,5 +59,16 @@ class MainViewModel(private val repository: LayoutRepository, private val api: L
 
     companion object {
         val TAG: String = MainViewModel::class.java.name
+
+        private val moshi = Moshi.Builder()
+            .add(
+                PolymorphicJsonAdapterFactory.of(LayoutElement::class.java, "type")
+                    .withSubtype(LayoutElement.Page::class.java, "page")
+                    .withSubtype(LayoutElement.Section::class.java, "section")
+                    .withSubtype(LayoutElement.Text::class.java, "text")
+                    .withSubtype(LayoutElement.Image::class.java, "image")
+            )
+            .add(KotlinJsonAdapterFactory())
+            .build()
     }
 }
