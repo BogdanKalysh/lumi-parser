@@ -72,6 +72,7 @@ dependencies {
     implementation(libs.squareup.moshi.kotlin)
     implementation(libs.squareup.moshi.adapters)
     implementation(libs.squareup.retrofit.converter.moshi)
+    implementation(libs.squareup.retrofit.converter.scalars)
 
     // Koin
     implementation(libs.io.insert.koin.android)

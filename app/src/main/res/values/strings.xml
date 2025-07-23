@@ -1,5 +1,6 @@
 <resources>
     <string name="app_name">Lumi parser</string>
 
-    <string name="server">https://mocki.io/</string>
+    <string name="server_name">https://mocki.io/</string>
+    <string name="database_name">layout_database</string>
 </resources>

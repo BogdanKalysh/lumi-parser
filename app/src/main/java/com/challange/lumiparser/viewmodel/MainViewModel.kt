@@ -4,15 +4,16 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.challange.lumiparser.retrofit.LayoutAPI
-import com.challange.lumiparser.retrofit.model.LayoutElement
+import com.challange.lumiparser.room.LayoutRepository
+import com.challange.lumiparser.room.models.Layout
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
-class MainViewModel(private val api: LayoutAPI): ViewModel() {
+class MainViewModel(private val repository: LayoutRepository, private val api: LayoutAPI): ViewModel() {
     val isUpdating = MutableStateFlow(false)
-    val layout = MutableStateFlow<LayoutElement?>(null)
+    val layout = repository.getFirstLayout()
 
     fun loadLayout() {
         Log.d(TAG, "Calling loadLayout")
@@ -32,7 +33,7 @@ class MainViewModel(private val api: LayoutAPI): ViewModel() {
 
             if (response.isSuccessful && response.body() != null) {
                 Log.i(TAG, "Successfully fetched devices data.")
-                layout.value = response.body()
+                repository.upsertLayout(Layout(0, response.body() ?: ""))
             }
             isUpdating.value = false
         }

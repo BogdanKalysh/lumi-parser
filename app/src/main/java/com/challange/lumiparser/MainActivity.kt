@@ -27,10 +27,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             LumiParserTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    val layout by viewModel.layout.collectAsState()
+                    val layout by viewModel.layout.collectAsState(initial = null)
 
-                    layout?.let {
-                        TextDisplayer(layout.toString(), Modifier.padding(innerPadding))
+                    layout?.run {
+                        TextDisplayer(layoutJson, Modifier.padding(innerPadding))
                     }
                 }
             }

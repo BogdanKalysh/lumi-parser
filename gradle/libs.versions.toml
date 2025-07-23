@@ -39,6 +39,7 @@ squareup-moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "
 squareup-moshi-kotlin = { group = "com.squareup.moshi", name = "moshi-kotlin", version.ref = "moshi" }
 squareup-moshi-adapters = { group = "com.squareup.moshi", name = "moshi-adapters", version.ref = "moshi" }
 squareup-retrofit-converter-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
+squareup-retrofit-converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofit" }
 io-insert-koin-android = { group = "io.insert-koin", name = "koin-android", version.ref = "koin" }
 io-insert-koin-test = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
