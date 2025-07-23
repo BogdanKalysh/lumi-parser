@@ -16,6 +16,7 @@ okhttp = "5.1.0"
 koin = "4.1.0"
 lifecycleViewmodelKtx = "2.9.2"
 coil = "2.7.0"
+navigationCompose = "2.9.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -45,6 +46,7 @@ io-insert-koin-android = { group = "io.insert-koin", name = "koin-android", vers
 io-insert-koin-test = { group = "io.insert-koin", name = "koin-test-junit4", version.ref = "koin" }
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 io-coil-kt = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+androidx-navigation-compose-jvmstubs = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

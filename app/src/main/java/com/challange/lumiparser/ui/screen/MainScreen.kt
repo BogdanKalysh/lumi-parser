@@ -18,15 +18,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.challange.lumiparser.R
 import com.challange.lumiparser.ui.visitor.ComposableRenderVisitor
 import com.challange.lumiparser.viewmodel.MainViewModel
 
 @Composable
-fun MainScreen(viewModel: MainViewModel, modifier: Modifier = Modifier) {
+fun MainScreen(viewModel: MainViewModel, navController: NavHostController, modifier: Modifier = Modifier) {
     Column(modifier = modifier) {
         TobBar()
-        LayoutScroll(viewModel, Modifier.weight(1F))
+        LayoutScroll(viewModel, navController, Modifier.weight(1F))
     }
 }
 
@@ -53,15 +54,16 @@ private fun TobBar(modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun LayoutScroll(viewModel: MainViewModel, modifier: Modifier = Modifier) {
+private fun LayoutScroll(viewModel: MainViewModel, navController: NavHostController, modifier: Modifier = Modifier) {
     val layout by viewModel.layout.collectAsState(initial = null)
+    val renderVisitor = ComposableRenderVisitor(navController)
 
     Column(
         modifier = modifier
             .verticalScroll(rememberScrollState())
     ) {
         layout?.run {
-            accept(ComposableRenderVisitor)()
+            accept(renderVisitor)()
         }
     }
 }

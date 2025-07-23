@@ -8,7 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.ui.Modifier
-import com.challange.lumiparser.ui.screen.MainScreen
+import androidx.navigation.compose.rememberNavController
+import com.challange.lumiparser.ui.navigation.AppNavGraph
 import com.challange.lumiparser.ui.theme.LumiParserTheme
 import com.challange.lumiparser.viewmodel.MainViewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -20,9 +21,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val navController = rememberNavController()
+
             LumiParserTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    MainScreen(viewModel, Modifier.padding(innerPadding))
+                    AppNavGraph(navController, viewModel, Modifier.padding(innerPadding))
                 }
             }
         }

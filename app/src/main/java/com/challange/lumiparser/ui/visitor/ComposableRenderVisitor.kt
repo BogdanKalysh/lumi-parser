@@ -1,5 +1,6 @@
 package com.challange.lumiparser.ui.visitor
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -9,11 +10,18 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.challange.lumiparser.ui.component.LayoutElement
+import java.net.URLEncoder
+import java.nio.charset.StandardCharsets
 
-object ComposableRenderVisitor : LayoutElementVisitor<@Composable () -> Unit> {
+class ComposableRenderVisitor(
+    private val navController: NavController
+) : LayoutElementVisitor<@Composable () -> Unit> {
     override fun visitPage(page: LayoutElement.Page): @Composable () -> Unit = {
         Column {
             Text(page.title, style = MaterialTheme.typography.headlineMedium)
@@ -36,13 +44,21 @@ object ComposableRenderVisitor : LayoutElementVisitor<@Composable () -> Unit> {
 
     override fun visitImage(image: LayoutElement.Image): @Composable () -> Unit = {
         Column(Modifier.padding(8.dp)) {
-            Text(image.title)
             AsyncImage(
-                model = image.src,
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(image.src)
+                    .size(200)
+                    .build(),
                 contentDescription = image.title,
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(200.dp)
+                    .clickable {
+                        val encodedUrl = URLEncoder.encode(image.src, StandardCharsets.UTF_8.toString())
+                        navController.navigate("full_image_screen/$encodedUrl/${image.title}") {
+                            launchSingleTop = true
+                        }
+                    }
             )
         }
     }
