@@ -67,8 +67,11 @@ dependencies {
 
     // Retrofit
     implementation(libs.squareup.retrofit)
-    implementation(libs.squareup.retrofit.converter)
     implementation(libs.squareup.okhttp)
+    implementation(libs.squareup.moshi)
+    implementation(libs.squareup.moshi.kotlin)
+    implementation(libs.squareup.moshi.adapters)
+    implementation(libs.squareup.retrofit.converter.moshi)
 
     // Koin
     implementation(libs.io.insert.koin.android)

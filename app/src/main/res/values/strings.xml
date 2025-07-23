@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Lumi parser</string>
+
+    <string name="server">https://mocki.io/</string>
 </resources>
