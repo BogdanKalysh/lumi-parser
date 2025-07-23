@@ -10,6 +10,7 @@ import com.challange.lumiparser.ui.component.LayoutElement
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -38,6 +39,8 @@ class MainViewModel(private val repository: LayoutRepository, private val api: L
 
         viewModelScope.launch {
             val response = try {
+                isUpdating.value = true
+                delay(2000L) // Simulating a long running API request
                 api.getLayout()
             } catch (ex: IOException) {
                 Log.e(TAG, "IOException, could not fetch data from server")

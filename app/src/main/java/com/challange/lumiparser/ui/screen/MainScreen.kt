@@ -1,6 +1,7 @@
 package com.challange.lumiparser.ui.screen
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -55,15 +57,26 @@ private fun TobBar(modifier: Modifier = Modifier) {
 
 @Composable
 private fun LayoutScroll(viewModel: MainViewModel, navController: NavHostController, modifier: Modifier = Modifier) {
-    val layout by viewModel.layout.collectAsState(initial = null)
+    val layout by viewModel.layout.collectAsState(null)
+    val isUpdating by viewModel.isUpdating.collectAsState(false)
     val renderVisitor = ComposableRenderVisitor(navController)
 
-    Column(
+    Box(
+        contentAlignment = Alignment.Center,
         modifier = modifier
-            .verticalScroll(rememberScrollState())
     ) {
-        layout?.run {
-            accept(renderVisitor)()
+        Column(
+            modifier = Modifier
+                .verticalScroll(rememberScrollState())
+        ) {
+            layout?.run {
+                accept(renderVisitor)()
+            }
+        }
+
+        if (isUpdating) {
+            CircularProgressIndicator()
         }
     }
+
 }
