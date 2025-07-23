@@ -11,7 +11,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -20,8 +22,16 @@ import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
 
 class ComposableRenderVisitor(
-    private val navController: NavController
+    private val navController: NavController,
+    private val depth: Int = 0
 ) : LayoutElementVisitor<@Composable () -> Unit> {
+
+    private fun getTitleStyle(baseStyle: TextStyle): TextStyle {
+        val baseSize = baseStyle.fontSize
+        val newSize = (baseSize.value - depth * 2).coerceAtLeast(12f)
+        return baseStyle.copy(fontSize = newSize.sp)
+    }
+
     override fun visitPage(page: LayoutElement.Page): @Composable () -> Unit = {
         Column {
             Text(page.title, style = MaterialTheme.typography.headlineMedium)
@@ -32,8 +42,9 @@ class ComposableRenderVisitor(
     override fun visitSection(section: LayoutElement.Section): @Composable () -> Unit = {
         Card(Modifier.padding(8.dp)) {
             Column(Modifier.padding(8.dp)) {
-                Text(section.title, style = MaterialTheme.typography.titleLarge)
-                section.items.forEach { it.accept(this@ComposableRenderVisitor)() }
+                // decreasing the title text size for nested sections
+                Text(section.title, style = getTitleStyle(MaterialTheme.typography.titleLarge))
+                section.items.forEach { it.accept(ComposableRenderVisitor(navController, depth + 1))() }
             }
         }
     }
