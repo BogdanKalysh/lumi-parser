@@ -77,4 +77,7 @@ dependencies {
     // Koin
     implementation(libs.io.insert.koin.android)
     testImplementation(libs.io.insert.koin.test)
+
+    // Coil
+    implementation(libs.io.coil.kt)
 }
