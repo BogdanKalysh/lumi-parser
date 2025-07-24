@@ -35,7 +35,7 @@ class MainViewModel(private val repository: LayoutRepository, private val api: L
                 if (fetchedLayout == null || fetchedLayout.layoutJson.isEmpty()) {
                     requestLayout()
                 }
-                val adapter = moshi.adapter(LayoutElement::class.java)
+                val adapter = moshiLayoutAdapter
                 fetchedLayout?.run {
                     try {
                         val parsed = adapter.fromJson(layoutJson)
@@ -55,7 +55,7 @@ class MainViewModel(private val repository: LayoutRepository, private val api: L
         isUpdating.value = true
         viewModelScope.launch {
             try {
-                withTimeout(5000L) { // request timeout 5 seconds
+                withTimeout(5000L) { // request timeout is 5 seconds
                     delay(2000L) // Simulating a long running API request
                     val response = api.getLayout()
 
@@ -65,7 +65,7 @@ class MainViewModel(private val repository: LayoutRepository, private val api: L
                         repository.upsertLayout(Layout(0, body))
 
                         // optimistic update for layout observed by Compose
-                        val adapter = moshi.adapter(LayoutElement::class.java)
+                        val adapter = moshiLayoutAdapter
                         val parsed = adapter.fromJson(body)
                         layout.value = parsed
                     } else {
@@ -91,7 +91,7 @@ class MainViewModel(private val repository: LayoutRepository, private val api: L
     companion object {
         val TAG: String = MainViewModel::class.java.name
 
-        private val moshi = Moshi.Builder()
+        private val moshiLayoutAdapter = Moshi.Builder()
             .add(
                 PolymorphicJsonAdapterFactory.of(LayoutElement::class.java, "type")
                     .withSubtype(LayoutElement.Page::class.java, "page")
@@ -101,5 +101,6 @@ class MainViewModel(private val repository: LayoutRepository, private val api: L
             )
             .add(KotlinJsonAdapterFactory())
             .build()
+            .adapter(LayoutElement::class.java)
     }
 }

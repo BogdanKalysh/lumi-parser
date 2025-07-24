@@ -98,15 +98,6 @@ private fun LayoutScroll(viewModel: MainViewModel, navController: NavHostControl
         if (isUpdating) {
             CircularProgressIndicator()
         } else {
-            Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-            ) {
-                layout?.run {
-                    accept(renderVisitor)()
-                }
-            }
-
             if (layout == null && isInitialized) {
                 Text("No layout",
                     Modifier
@@ -114,6 +105,10 @@ private fun LayoutScroll(viewModel: MainViewModel, navController: NavHostControl
                         .padding(horizontal = 20.dp)
                         .padding(vertical = 16.dp)
                 )
+            } else {
+                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    layout?.accept(renderVisitor)?.invoke()
+                }
             }
         }
     }
