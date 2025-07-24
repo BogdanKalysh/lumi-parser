@@ -88,6 +88,7 @@ private fun TobBar(viewModel: MainViewModel, modifier: Modifier = Modifier) {
 private fun LayoutScroll(viewModel: MainViewModel, navController: NavHostController, modifier: Modifier = Modifier) {
     val layout by viewModel.layout.collectAsState(null)
     val isUpdating by viewModel.isUpdating.collectAsState(false)
+    val isInitialized by viewModel.isInitialized.collectAsState(false)
     val renderVisitor = ComposableRenderVisitor(navController)
 
     Box(
@@ -104,6 +105,15 @@ private fun LayoutScroll(viewModel: MainViewModel, navController: NavHostControl
                 layout?.run {
                     accept(renderVisitor)()
                 }
+            }
+
+            if (layout == null && isInitialized) {
+                Text("No layout",
+                    Modifier
+                        .background(Color.Red)
+                        .padding(horizontal = 20.dp)
+                        .padding(vertical = 16.dp)
+                )
             }
         }
     }

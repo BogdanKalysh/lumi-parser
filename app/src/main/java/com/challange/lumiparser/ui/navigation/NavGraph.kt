@@ -23,8 +23,8 @@ fun AppNavGraph(navController: NavHostController, viewModel: MainViewModel, modi
         composable(
             "full_image_screen/{imageUrl}/{title}"
         ) { backStackEntry ->
-            val imageUrl = URLDecoder.decode(backStackEntry.arguments?.getString("imageUrl")!!, StandardCharsets.UTF_8.toString())
-            val title = backStackEntry.arguments?.getString("title")!!
+            val imageUrl = URLDecoder.decode(backStackEntry.arguments?.getString("imageUrl"), StandardCharsets.UTF_8.toString())
+            val title = backStackEntry.arguments?.getString("title") ?: ""
             FullImageScreen(imageUrl, title, navController, modifier)
         }
     }

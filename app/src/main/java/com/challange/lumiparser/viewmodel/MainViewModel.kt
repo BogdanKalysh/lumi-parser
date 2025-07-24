@@ -24,6 +24,7 @@ class MainViewModel(private val repository: LayoutRepository, private val api: L
     private val dbLayout = repository.getFirstLayout()
     val layout = MutableStateFlow<LayoutElement?>(null)
     val isUpdating = MutableStateFlow(false)
+    val isInitialized = MutableStateFlow(false)
 
     private val _toastMessage = MutableSharedFlow<String>()
     val toastMessage = _toastMessage.asSharedFlow()
@@ -36,25 +37,37 @@ class MainViewModel(private val repository: LayoutRepository, private val api: L
                 }
                 val adapter = moshi.adapter(LayoutElement::class.java)
                 fetchedLayout?.run {
-                    val parsed = adapter.fromJson(layoutJson)
-                    layout.value = parsed
+                    try {
+                        val parsed = adapter.fromJson(layoutJson)
+                        layout.value = parsed
+                    } catch (ex: IOException) {
+                        _toastMessage.emit("Unable to receive cached layout. push the update button.")
+                        Log.e(TAG, "Local layout parsing failed: ${ex.message}")
+                    }
                 }
+                isInitialized.value = true
             }
         }
     }
 
     fun requestLayout() {
         Log.d(TAG, "Calling loadLayout")
+        isUpdating.value = true
         viewModelScope.launch {
             try {
-                isUpdating.value = true
                 withTimeout(5000L) { // request timeout 5 seconds
                     delay(2000L) // Simulating a long running API request
                     val response = api.getLayout()
 
                     if (response.isSuccessful && response.body() != null) {
-                        Log.i(TAG, "Successfully fetched devices data.")
-                        repository.upsertLayout(Layout(0, response.body() ?: ""))
+                        Log.i(TAG, "Successfully fetched devices data: ${response.body()}")
+                        val body = response.body() ?: ""
+                        repository.upsertLayout(Layout(0, body))
+
+                        // optimistic update for layout observed by Compose
+                        val adapter = moshi.adapter(LayoutElement::class.java)
+                        val parsed = adapter.fromJson(body)
+                        layout.value = parsed
                     } else {
                         _toastMessage.emit("Request failed: ${response.code()}")
                         Log.e(TAG, "Request failed: ${response.code()}")
@@ -64,7 +77,7 @@ class MainViewModel(private val repository: LayoutRepository, private val api: L
                 _toastMessage.emit("Request failed: timeout exceeded")
                 Log.e(TAG, "Request failed: timeout exceeded")
             } catch (ex: IOException) {
-                _toastMessage.emit("Request failed: could not fetch data from serve")
+                _toastMessage.emit("Request failed: could not fetch data from the server")
                 Log.e(TAG, "IOException, could not fetch data from server")
             } catch (ex: HttpException) {
                 _toastMessage.emit("Request failed: unexpected response")
