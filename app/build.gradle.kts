@@ -1,9 +1,17 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.devtools.ksp)
 }
+
+val localProperties = Properties().apply {
+    load(File(rootDir, "local.properties").inputStream())
+}
+val defaultBaseUrl = "DEFAULT"
+val baseUrl = localProperties.getProperty("BASE_URL") ?: defaultBaseUrl
 
 android {
     namespace = "com.challange.lumiparser"
@@ -17,6 +25,7 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
     }
 
     buildTypes {
@@ -37,6 +46,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
