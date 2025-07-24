@@ -52,11 +52,19 @@ dependencies {
     implementation(libs.androidx.material3)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.compose.jvmstubs)
+    implementation(libs.core.ktx)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
     // Testing
     testImplementation(libs.junit)
+    testImplementation(libs.androidx.arch)
+    testImplementation(libs.org.mockito.core)
+    testImplementation(libs.org.mockito.inline)
+    testImplementation(libs.org.mockito.kotlin)
+    testImplementation(libs.io.mockk)
+    testImplementation(libs.coroutines.test)
+    androidTestImplementation(libs.androidx.arch)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
@@ -81,4 +89,5 @@ dependencies {
 
     // Coil
     implementation(libs.io.coil.kt)
+    testImplementation(kotlin("test"))
 }

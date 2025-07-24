@@ -17,11 +17,24 @@ koin = "4.1.0"
 lifecycleViewmodelKtx = "2.9.2"
 coil = "2.7.0"
 navigationCompose = "2.9.2"
+coreKtxVersion = "1.6.1"
+arch = "2.2.0"
+mockitoCore = "5.18.0"
+mockitoInline = "5.2.0"
+mockitoKotlin = "6.0.0"
+mockk = "1.14.5"
+coroutinesTest = "1.10.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-arch = { group = "androidx.arch.core", name = "core-testing", version.ref = "arch" }
+org-mockito-core = { group = "org.mockito", name = "mockito-core", version.ref = "mockitoCore" }
+org-mockito-inline = { group = "org.mockito", name = "mockito-inline", version.ref = "mockitoInline" }
+org-mockito-kotlin = { group = "org.mockito.kotlin", name = "mockito-kotlin", version.ref = "mockitoKotlin" }
+io-mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutinesTest" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
@@ -47,6 +60,7 @@ io-insert-koin-test = { group = "io.insert-koin", name = "koin-test-junit4", ver
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 io-coil-kt = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
 androidx-navigation-compose-jvmstubs = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose" }
+core-ktx = { group = "androidx.test", name = "core-ktx", version.ref = "coreKtxVersion" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
