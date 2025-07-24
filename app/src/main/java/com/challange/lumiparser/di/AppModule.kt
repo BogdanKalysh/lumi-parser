@@ -1,12 +1,14 @@
-package com.challange.lumiparser
+package com.challange.lumiparser.di
 
 import androidx.room.Room
+import com.challange.lumiparser.R
 import com.challange.lumiparser.retrofit.LayoutAPI
 import com.challange.lumiparser.retrofit.LayoutAPIImpl
 import com.challange.lumiparser.room.LayoutDao
 import com.challange.lumiparser.room.LayoutDatabase
 import com.challange.lumiparser.room.LayoutRepository
 import com.challange.lumiparser.room.LayoutRepositoryImpl
+import com.challange.lumiparser.utils.NetworkConfig.provideBaseUrl
 import com.challange.lumiparser.viewmodel.MainViewModel
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.module.dsl.viewModelOf
@@ -17,7 +19,7 @@ import retrofit2.converter.scalars.ScalarsConverterFactory
 val appModule = module {
     single <LayoutAPI> {
         Retrofit.Builder()
-            .baseUrl(androidContext().getString(R.string.server_name))
+            .baseUrl(provideBaseUrl(androidContext()))
             .addConverterFactory(ScalarsConverterFactory.create())
             .build()
             .create(LayoutAPIImpl::class.java)

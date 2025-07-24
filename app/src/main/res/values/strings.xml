@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Lumi parser</string>
 
-    <string name="server_name">https://mocki.io/</string>
+    <string name="default_base_url">https://mocki.io/</string>
     <string name="database_name">layout_database</string>
     <string name="back_button_description">Back</string>
     <string name="no_layout">No layout</string>
