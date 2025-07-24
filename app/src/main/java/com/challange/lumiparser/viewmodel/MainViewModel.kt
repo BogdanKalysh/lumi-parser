@@ -3,10 +3,12 @@ package com.challange.lumiparser.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.challange.lumiparser.R
 import com.challange.lumiparser.retrofit.LayoutAPI
 import com.challange.lumiparser.room.LayoutRepository
 import com.challange.lumiparser.room.models.Layout
 import com.challange.lumiparser.ui.component.LayoutElement
+import com.challange.lumiparser.ui.util.UiMessage
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.adapters.PolymorphicJsonAdapterFactory
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
@@ -26,7 +28,7 @@ class MainViewModel(private val repository: LayoutRepository, private val api: L
     val isUpdating = MutableStateFlow(false)
     val isInitialized = MutableStateFlow(false)
 
-    private val _toastMessage = MutableSharedFlow<String>()
+    private val _toastMessage = MutableSharedFlow<UiMessage>()
     val toastMessage = _toastMessage.asSharedFlow()
 
     init {
@@ -41,7 +43,7 @@ class MainViewModel(private val repository: LayoutRepository, private val api: L
                         val parsed = adapter.fromJson(layoutJson)
                         layout.value = parsed
                     } catch (ex: IOException) {
-                        _toastMessage.emit("Unable to receive cached layout. Update the page.")
+                        _toastMessage.emit(UiMessage.StringRes(R.string.unable_to_receive_cached_layout))
                         Log.e(TAG, "Local layout parsing failed: ${ex.message}")
                     }
                 }
@@ -69,18 +71,23 @@ class MainViewModel(private val repository: LayoutRepository, private val api: L
                         val parsed = adapter.fromJson(body)
                         layout.value = parsed
                     } else {
-                        _toastMessage.emit("Request failed: ${response.code()}")
+                        _toastMessage.emit(
+                            UiMessage.StringRes(
+                                R.string.request_failed,
+                                listOf(response.code())
+                            )
+                        )
                         Log.e(TAG, "Request failed: ${response.code()}")
                     }
                 }
             } catch (ex: TimeoutCancellationException) {
-                _toastMessage.emit("Request failed: timeout exceeded")
+                _toastMessage.emit(UiMessage.StringRes(R.string.request_failed_timeout_exceeded))
                 Log.e(TAG, "Request failed: timeout exceeded")
             } catch (ex: IOException) {
-                _toastMessage.emit("Request failed: could not fetch data from the server")
+                _toastMessage.emit(UiMessage.StringRes(R.string.could_not_fetch_data_from_the_server))
                 Log.e(TAG, "IOException, could not fetch data from server")
             } catch (ex: HttpException) {
-                _toastMessage.emit("Request failed: unexpected response")
+                _toastMessage.emit(UiMessage.StringRes(R.string.unexpected_response))
                 Log.e(TAG, "HttpException, unexpected response")
             } finally {
                 isUpdating.value = false

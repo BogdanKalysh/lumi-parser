@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
@@ -55,12 +56,14 @@ fun TopBar(title: String, navController: NavHostController, modifier: Modifier =
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_back),
-                contentDescription = "Back button",
+                contentDescription = stringResource(R.string.back_button_description),
                 tint = MaterialTheme.colorScheme.onSecondary
             )
         }
 
         Text(title, style = MaterialTheme.typography.titleSmall,
-            modifier = Modifier.padding(horizontal = 16.dp).weight(1F))
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .weight(1F))
     }
 }

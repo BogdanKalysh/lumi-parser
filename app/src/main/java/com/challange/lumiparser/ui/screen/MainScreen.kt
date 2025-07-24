@@ -31,6 +31,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.challange.lumiparser.R
+import com.challange.lumiparser.ui.util.UiMessage
 import com.challange.lumiparser.ui.visitor.ComposableRenderVisitor
 import com.challange.lumiparser.viewmodel.MainViewModel
 
@@ -44,7 +45,11 @@ fun MainScreen(viewModel: MainViewModel, navController: NavHostController, modif
     val context = LocalContext.current
     LaunchedEffect(Unit) {
         viewModel.toastMessage.collect { msg ->
-            Toast.makeText(context, msg, Toast.LENGTH_SHORT).show()
+            val text = when (msg) {
+                is UiMessage.StringRes -> context.getString(msg.resId, *msg.args.toTypedArray())
+                is UiMessage.Text -> msg.message
+            }
+            Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
         }
     }
 }
@@ -67,7 +72,9 @@ private fun TobBar(viewModel: MainViewModel, modifier: Modifier = Modifier) {
         Text(
             stringResource(R.string.app_name),
             style = MaterialTheme.typography.titleSmall,
-            modifier = Modifier.padding(horizontal = 16.dp).weight(1F)
+            modifier = Modifier
+                .padding(horizontal = 16.dp)
+                .weight(1F)
         )
         IconButton(
             onClick = { viewModel.requestLayout() },
@@ -78,7 +85,7 @@ private fun TobBar(viewModel: MainViewModel, modifier: Modifier = Modifier) {
         ) {
             Icon(
                 painter = painterResource(R.drawable.ic_reload),
-                contentDescription = "Reload button",
+                contentDescription = stringResource(R.string.reload_button_description),
                 tint = MaterialTheme.colorScheme.onSecondary
             )
         }
@@ -100,7 +107,8 @@ private fun LayoutScroll(viewModel: MainViewModel, navController: NavHostControl
             CircularProgressIndicator(color = MaterialTheme.colorScheme.onPrimary)
         } else {
             if (layout == null && isInitialized) {
-                Text("No layout",
+                Text(
+                    stringResource(R.string.no_layout),
                     style = MaterialTheme.typography.titleMedium,
                     modifier = Modifier
                         .background(MaterialTheme.colorScheme.tertiary, RoundedCornerShape(16.dp))
