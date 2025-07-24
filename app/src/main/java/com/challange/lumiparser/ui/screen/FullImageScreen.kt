@@ -35,7 +35,7 @@ fun FullImageScreen(url: String, title: String, navController: NavHostController
                     .background(color = Color.Red, shape = CircleShape)
             ) {
                 Icon(
-                    painter = painterResource(R.drawable.ic_reload),
+                    painter = painterResource(R.drawable.ic_back),
                     contentDescription = "Reload button",
                     tint = Color.Blue
                 )

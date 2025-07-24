@@ -58,7 +58,7 @@ private fun TobBar(viewModel: MainViewModel, modifier: Modifier = Modifier) {
             .height(64.dp)
     ) {
         Image(
-            painter = painterResource(R.drawable.ic_launcher_background),
+            painter = painterResource(R.drawable.logo),
             contentDescription = null,
             modifier = Modifier
                 .padding(start = 16.dp)
