@@ -41,7 +41,7 @@ class MainViewModel(private val repository: LayoutRepository, private val api: L
                         val parsed = adapter.fromJson(layoutJson)
                         layout.value = parsed
                     } catch (ex: IOException) {
-                        _toastMessage.emit("Unable to receive cached layout. push the update button.")
+                        _toastMessage.emit("Unable to receive cached layout. Update the page.")
                         Log.e(TAG, "Local layout parsing failed: ${ex.message}")
                     }
                 }
