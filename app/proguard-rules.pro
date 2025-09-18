@@ -19,3 +19,13 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Keep All annotations
+-keepattributes *Annotation*
+
+# Don't obfuscate models for Moshi
+-keep class com.challange.lumiparser.room.models.** { *; }
+
+# Keep classes with reflection (Retrofit)
+-keep class retrofit2.** { *; }
+-dontwarn retrofit2.**
