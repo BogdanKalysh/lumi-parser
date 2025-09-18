@@ -15,12 +15,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.challange.lumiparser.R
 import com.challange.lumiparser.ui.component.LayoutElement
 import com.challange.lumiparser.ui.theme.Blue
 import java.net.URLEncoder
@@ -38,16 +42,25 @@ class ComposableRenderVisitor(
     }
 
     override fun visitPage(page: LayoutElement.Page): @Composable () -> Unit = {
+        val pageTitle = stringResource(R.string.page_title, page.title)
+
         Column {
             Text(
                 page.title,
                 style = MaterialTheme.typography.displayLarge,
-                modifier =  Modifier.padding(top = 24.dp))
+                modifier = Modifier
+                    .padding(top = 24.dp)
+                    .semantics(mergeDescendants = false) {
+                        contentDescription = pageTitle
+                    }
+            )
                 page.items.forEach { it.accept(this@ComposableRenderVisitor)() }
         }
     }
 
     override fun visitSection(section: LayoutElement.Section): @Composable () -> Unit = {
+        val sectionTitle = stringResource(R.string.section_title, section.title)
+
         Card(
             colors = CardDefaults.cardColors(
                 containerColor = MaterialTheme.colorScheme.secondary
@@ -61,7 +74,12 @@ class ComposableRenderVisitor(
             }
             Column(Modifier.padding(paddingValues)) {
                 // decreasing the title text size for nested sections
-                Text(section.title, style = getTitleStyle(MaterialTheme.typography.titleMedium))
+                Text(
+                    section.title,
+                    style = getTitleStyle(MaterialTheme.typography.titleMedium),
+                    modifier = Modifier.semantics(mergeDescendants = false) {
+                        contentDescription = sectionTitle
+                    })
                 Box(modifier = Modifier.fillMaxWidth().height(1.dp).background(Blue))
                 section.items.forEach { it.accept(ComposableRenderVisitor(navController, depth + 1))() }
             }

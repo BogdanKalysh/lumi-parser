@@ -11,4 +11,7 @@
     <string name="request_failed_timeout_exceeded">Request failed: timeout exceeded</string>
     <string name="could_not_fetch_data_from_the_server">Request failed: could not fetch data from the server</string>
     <string name="unexpected_response">Request failed: unexpected response</string>
+
+    <string name="page_title">%s page title</string>
+    <string name="section_title">%s section title</string>
 </resources>
