@@ -19,9 +19,9 @@
 - Coroutines & Flow
 
 ## 📱 Screenshots
-<img width="300" alt="Screenshot_20251015-193324" src="https://github.com/user-attachments/assets/70f4db0e-70bb-4803-a1bd-4223cae503cf" />
-<img width="300" alt="Screenshot_20251015-193139" src="https://github.com/user-attachments/assets/79925279-a6f9-4407-b750-b15e76f58c95" />
-<img width="300" alt="Screenshot_20251015-193146" src="https://github.com/user-attachments/assets/ac35913a-fd03-491a-a5b5-49e0ab8dce0a" />
+<img width="200" alt="Screenshot_20251015-193324" src="https://github.com/user-attachments/assets/70f4db0e-70bb-4803-a1bd-4223cae503cf" />
+<img width="200" alt="Screenshot_20251015-193139" src="https://github.com/user-attachments/assets/79925279-a6f9-4407-b750-b15e76f58c95" />
+<img width="200" alt="Screenshot_20251015-193146" src="https://github.com/user-attachments/assets/ac35913a-fd03-491a-a5b5-49e0ab8dce0a" />
 
 
 ---
